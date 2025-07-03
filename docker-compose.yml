@@ -1,0 +1,20 @@
+services:
+  postgres:
+    env_file:
+      - path: .env
+        required: true
+    build: docker
+    container_name: postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U"]
+      interval: 3s
+      timeout: 1s
+      retries: 10
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
